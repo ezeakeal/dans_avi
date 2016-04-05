@@ -1,39 +1,50 @@
-from rest_framework import mixins
 from rest_framework import generics
-from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer, AdminRenderer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer, AdminRenderer
+
+from django.shortcuts import get_object_or_404
+from django.conf import settings
 
 from pipeline import manager
 from avi.models import DemoModel
-from avi.serializers import DemoModelSerializer
+from avi.serializers import DemoModelSerializer, ViewJobsSerializer
 
+import os
+import json
 import logging
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.WARN)
 
-class DemoModelList(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  generics.GenericAPIView):
+
+class DemoModelList(generics.ListCreateAPIView):
     queryset = DemoModel.objects.all()
     serializer_class = DemoModelSerializer
-    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, AdminRenderer)
-    
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+    renderer_classes = (JSONRenderer, AdminRenderer)
 
 
-class DemoModelDetail(mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin,
-                    generics.GenericAPIView):
+class DemoModelDetail(generics.RetrieveDestroyAPIView):
     queryset = DemoModel.objects.all()
     serializer_class = DemoModelSerializer
-    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, AdminRenderer)
+    renderer_classes = (JSONRenderer, AdminRenderer)
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+class JobData(APIView):
+
+    def get(self, request, job_id):
+        job = get_object_or_404(DemoModel, request_id=job_id)
+        file_path = os.path.join(settings.OUTPUT_PATH, job.outputFile)
+        with open(file_path, 'r') as outFile:
+            job_data = json.load(outFile)
+        return Response(job_data)
+
+
+class ViewJobsList(generics.ListAPIView):
+    queryset = DemoModel.objects.all()
+    serializer_class = ViewJobsSerializer
+    renderer_classes = (JSONRenderer, AdminRenderer)
+
+
+class ViewJobsListDetail(generics.RetrieveAPIView):
+    queryset = DemoModel.objects.all()
+    serializer_class = ViewJobsSerializer
+    renderer_classes = (JSONRenderer, AdminRenderer)

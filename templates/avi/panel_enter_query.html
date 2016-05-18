@@ -33,6 +33,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/6.2.0/jquery.nouislider.min.js"></script>
 
 <script>
+// window.user_profile is provided by the AVI Framework
+var resource_pool = window.user_profile.resource_pool;
+
 $(document).ready(function(){
   $(function() {                        
     $("#ramslider").noUiSlider({
@@ -41,7 +44,7 @@ $(document).ready(function(){
       step: 1,
       range: {
         'min': 128,
-        'max': 4096
+        'max': resource_pool.ram
       }
     }).on('slide', function( event, ramvalue ) {
       var ramval = Math.round(ramvalue)

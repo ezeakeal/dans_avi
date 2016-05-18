@@ -72,6 +72,8 @@ def run_query(request):
 
     We start the job using the job_request ID, and return the
     ID to the user so they can view progress.
+
+    Notice that we specify the RAM to allocate to the pipeline.
     """
     outfile = request.POST.get("outfile")
     adql_query = request.POST.get("query")

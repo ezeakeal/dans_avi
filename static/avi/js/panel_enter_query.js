@@ -15,7 +15,7 @@ $.ajaxSetup({
 $( "#dbquery_form" ).submit(function( event ) {
     event.preventDefault();
     $('button:submit').attr("disabled", "disabled");
-    submitUrl = '/avi/run_query/';
+    submitUrl = 'run_query/';
     $.ajax({
         type: "POST",
         url: submitUrl,

@@ -47,7 +47,6 @@ def index(request):
     """
     context = {
         "millis": int(round(time.time() * 1000)),
-        "standalone": False,  # This stops the base template rendering the navbar on top
         "show_welcome": request.session.get('show_welcome', True)
     }
     request.session['show_welcome'] = False
@@ -90,7 +89,7 @@ def run_query(request):
 @require_http_methods(["GET"])
 def job_result(request, job_id):
     job = get_object_or_404(DemoModel, request_id=job_id)
-    file_path = manager.get_pipeline_status(job_id)['output']
+    file_path = manager.get_pipeline_status(job_id)['result_path']
     context = {'job_id': job_id}
     with open(file_path, 'r') as out_file:
         context.update(json.load(out_file))

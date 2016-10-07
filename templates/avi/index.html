@@ -28,7 +28,16 @@ GAVIP Example AVIs: Simple AVI
         </div>
         
         <div role="tabpanel" class="tab-pane fade" data-title="SAMPLE" id="job" aria-labelledby="job-tab">
-          {% include "avi/panel_job_list.html" %}
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              Job list help
+            </div>
+            <div class="panel-body">
+              This panel will query all jobs and show their progress. You can view their results too.
+              Enter in an ADQL query.
+            </div>
+          </div>
+          {% include "plugins/gavip_job_table.html" %}
         </div>
 
         <div role="tabpanel" class="tab-pane fade" data-title="SAMPLE" id="result" aria-labelledby="result-tab">
